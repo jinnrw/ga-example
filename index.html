@@ -54,12 +54,21 @@
               endDate: 'today'
             }],
             metrics: [{
-              expression: 'ga:sessions',
-              expression: 'ga:newUsers'
+              expression: 'ga:sessions'
+            }, {
+              expression: 'ga:users'
             }],
             dimensions: [{
-              "name": "ga:browser",
+              "name": "ga:browser"
+            }, {
               "name": "ga:country"
+            }],
+            dimensionFilterClauses: [{
+              "filters": [{
+                "dimensionName": "ga:browser",
+                "operator": "EXACT",
+                "expressions": ["Chrome"]
+              }]
             }]
           }]
         }
