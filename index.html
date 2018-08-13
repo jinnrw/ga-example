@@ -56,6 +56,7 @@
   <section id="auth-button"></section>
   <section id="view-selector"></section>
   <section id="timeline"></section>
+  <div id="view-selector-1-container"></div>
 
   <!-- <script>
     // Replace with your view ID.
@@ -135,10 +136,43 @@
         }
       });
 
+      /**
+       * Create a ViewSelector for the first view to be rendered inside of an
+       * element with the id "view-selector-1-container".
+       */
+      var viewSelector1 = new gapi.analytics.ViewSelector({
+        container: 'view-selector-1-container'
+      });
+
+      /**
+       * Create the first DataChart for top countries over the past 30 days.
+       * It will be rendered inside an element with the id "chart-1-container".
+       */
+      var dataChart1 = new gapi.analytics.googleCharts.DataChart({
+        query: {
+          metrics: 'ga:sessions',
+          dimensions: 'ga:country',
+          'start-date': '30daysAgo',
+          'end-date': 'yesterday',
+          'max-results': 6,
+          sort: '-ga:sessions'
+        },
+        chart: {
+          container: 'chart-1-container',
+          type: 'PIE',
+          options: {
+            width: '100%',
+            pieHole: 4 / 9
+          }
+        }
+      });
+
       // Step 6: Hook up the components to work together.
 
       gapi.analytics.auth.on('success', function (response) {
         viewSelector.execute();
+        viewSelector1.execute();
+
       });
 
       viewSelector.on('change', function (ids) {
@@ -148,6 +182,17 @@
           }
         }
         timeline.set(newIds).execute();
+      });
+
+            /**
+       * Update the first dataChart when the first view selecter is changed.
+       */
+       viewSelector1.on('change', function (ids) {
+        dataChart1.set({
+          query: {
+            ids: ids
+          }
+        }).execute();
       });
     });
   </script>
