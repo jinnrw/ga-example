@@ -54,10 +54,12 @@
               endDate: 'today'
             }],
             metrics: [{
-              expression: 'ga:sessions,ga:sessionDuration'
+              expression: 'ga:sessions',
+              expression: 'ga:newUsers'
             }],
             dimensions: [{
-              "name": "ga:browser"
+              "name": "ga:browser",
+              "name": "ga:country"
             }]
           }]
         }
