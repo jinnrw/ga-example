@@ -57,7 +57,7 @@
   <section id="view-selector"></section>
   <section id="timeline"></section>
 
-  <h4>Mobile Device Info</h4>
+  <h4>Browser</h4>
   <div id="view-selector-1-container"></div>
 
   <h4>Mobile Device Info</h4>
@@ -200,7 +200,7 @@
       gapi.analytics.auth.on('success', function (response) {
         viewSelector.execute();
         viewSelector1.execute();
-
+        viewSelector2.execute();
       });
 
       viewSelector.on('change', function (ids) {
@@ -212,10 +212,10 @@
         timeline.set(newIds).execute();
       });
 
-            /**
+      /**
        * Update the first dataChart when the first view selecter is changed.
        */
-       viewSelector1.on('change', function (ids) {
+      viewSelector1.on('change', function (ids) {
         dataChart1.set({
           query: {
             ids: ids
@@ -223,7 +223,7 @@
         }).execute();
       });
 
-       viewSelector2.on('change', function (ids) {
+      viewSelector2.on('change', function (ids) {
         dataChart2.set({
           query: {
             ids: ids
