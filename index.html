@@ -56,7 +56,12 @@
   <section id="auth-button"></section>
   <section id="view-selector"></section>
   <section id="timeline"></section>
+
+  <h4>Mobile Device Info</h4>
   <div id="view-selector-1-container"></div>
+
+  <h4>Mobile Device Info</h4>
+  <div id="view-selector-2-container"></div>
 
   <!-- <script>
     // Replace with your view ID.
@@ -151,7 +156,7 @@
       var dataChart1 = new gapi.analytics.googleCharts.DataChart({
         query: {
           metrics: 'ga:sessions',
-          dimensions: 'ga:country',
+          dimensions: 'ga:browser',
           'start-date': '30daysAgo',
           'end-date': 'yesterday',
           'max-results': 6,
@@ -159,6 +164,29 @@
         },
         chart: {
           container: 'chart-1-container',
+          type: 'PIE',
+          options: {
+            width: '100%',
+            pieHole: 4 / 9
+          }
+        }
+      });
+
+      var viewSelector2 = new gapi.analytics.ViewSelector({
+        container: 'view-selector-2-container'
+      });
+
+      var dataChart2 = new gapi.analytics.googleCharts.DataChart({
+        query: {
+          metrics: 'ga:sessions',
+          dimensions: 'ga:mobileDeviceInfo',
+          'start-date': '30daysAgo',
+          'end-date': 'yesterday',
+          'max-results': 6,
+          sort: '-ga:sessions'
+        },
+        chart: {
+          container: 'chart-2-container',
           type: 'PIE',
           options: {
             width: '100%',
@@ -194,6 +222,15 @@
           }
         }).execute();
       });
+
+       viewSelector2.on('change', function (ids) {
+        dataChart2.set({
+          query: {
+            ids: ids
+          }
+        }).execute();
+      });
+
     });
   </script>
 </body>
