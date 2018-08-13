@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>Hello Analytics Reporting API V4</title>
@@ -49,12 +50,15 @@
           reportRequests: [{
             viewId: VIEW_ID,
             dateRanges: [{
-              startDate: 'today',
+              startDate: '2018-8-1',
               endDate: 'today'
             }],
             metrics: [{
-              expression: 'ga:users'
+              expression: 'ga:sessions,ga:country'
             }],
+            dimensions: [{
+              "name": "ga:browser"
+            }]
           }]
         }
       }).then(displayResults, console.error.bind(console));
