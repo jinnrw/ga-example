@@ -58,11 +58,11 @@
   <section id="timeline"></section>
 
   <h4>Browser</h4>
-  <!-- <div id="view-selector-1-container"></div> -->
+  <div id="view-selector-1-container"></div>
   <div id="chart-1-container"></div>
 
   <h4>Mobile Device Info</h4>
-  <!-- <div id="view-selector-2-container"></div> -->
+  <div id="view-selector-2-container"></div>
   <div id="chart-2-container"></div>
 
   <div class="Chartjs">
@@ -163,9 +163,9 @@
        * Create a ViewSelector for the first view to be rendered inside of an
        * element with the id "view-selector-1-container".
        */
-      // var viewSelector1 = new gapi.analytics.ViewSelector({
-      //   container: 'view-selector-1-container'
-      // });
+      var viewSelector1 = new gapi.analytics.ViewSelector({
+        container: 'view-selector-1-container'
+      });
 
       /**
        * Create the first DataChart for top countries over the past 30 days.
@@ -190,9 +190,9 @@
         }
       });
 
-      // var viewSelector2 = new gapi.analytics.ViewSelector({
-      //   container: 'view-selector-2-container'
-      // });
+      var viewSelector2 = new gapi.analytics.ViewSelector({
+        container: 'view-selector-2-container'
+      });
 
       var dataChart2 = new gapi.analytics.googleCharts.DataChart({
         query: {
@@ -217,8 +217,8 @@
 
       gapi.analytics.auth.on('success', function (response) {
         viewSelector.execute();
-        // viewSelector1.execute();
-        // viewSelector2.execute();
+        viewSelector1.execute();
+        viewSelector2.execute();
       });
 
       viewSelector.on('change', function (ids) {
@@ -233,21 +233,21 @@
       /**
        * Update the first dataChart when the first view selecter is changed.
        */
-      // viewSelector1.on('change', function (ids) {
-      //   dataChart1.set({
-      //     query: {
-      //       ids: ids
-      //     }
-      //   }).execute();
-      // });
+      viewSelector1.on('change', function (ids) {
+        dataChart1.set({
+          query: {
+            ids: ids
+          }
+        }).execute();
+      });
 
-      // viewSelector2.on('change', function (ids) {
-      //   dataChart2.set({
-      //     query: {
-      //       ids: ids
-      //     }
-      //   }).execute();
-      // });
+      viewSelector2.on('change', function (ids) {
+        dataChart2.set({
+          query: {
+            ids: ids
+          }
+        }).execute();
+      });
 
       function renderTopBrowsersChart(ids) {
 
