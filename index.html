@@ -168,7 +168,7 @@
 
       gapi.analytics.auth.on('success', function (response) {
         // Start tracking active users for this view.
-        activeUsers.set(data).execute();
+        activeUsers.set(response).execute();
 
         viewSelector.execute();
         viewSelector1.execute();
