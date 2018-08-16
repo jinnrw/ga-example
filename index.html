@@ -48,6 +48,9 @@
 <body>
   <h1>Hello Analytics Reporting API V4 & Embed API</h1>
   <section id="auth-button"></section>
+
+  <div id="active-users-container"></div>
+
   <section id="view-selector"></section>
   <section id="timeline"></section>
 
@@ -59,6 +62,8 @@
   <div id="view-selector-2-container"></div>
   <div id="chart-2-container"></div>
 
+  <!-- Include the ActiveUsers component script. -->
+  <script src="./active-users.js"></script>
   <script>
     gapi.analytics.ready(function () {
 
@@ -69,6 +74,17 @@
       gapi.analytics.auth.authorize({
         container: 'auth-button',
         clientid: CLIENT_ID,
+      });
+
+
+      /**
+       * Create a new ActiveUsers instance to be rendered inside of an
+       * element with the id "active-users-container" and poll for changes every
+       * five seconds.
+       */
+      var activeUsers = new gapi.analytics.ext.ActiveUsers({
+        container: 'active-users-container',
+        pollingInterval: 5
       });
 
       // Step 4: Create the view selector.
@@ -150,6 +166,9 @@
       // Step 6: Hook up the components to work together.
 
       gapi.analytics.auth.on('success', function (response) {
+        // Start tracking active users for this view.
+        activeUsers.set(data).execute();
+
         viewSelector.execute();
         viewSelector1.execute();
         viewSelector2.execute();
