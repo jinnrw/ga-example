@@ -2,7 +2,7 @@ function queryReports(accessToken) {
 
   // Fetch Realtime api
   var apiURL = 'https://www.googleapis.com/analytics/v3/data/realtime?ids=',
-    viewId = "ga:179857751",
+    viewId = "***",
     apiOptions = '&metrics=rt:activeUsers';
 
     (function poll() {
@@ -29,7 +29,7 @@ function queryReports(accessToken) {
     method: 'POST',
     body: {
       reportRequests: [{
-        viewId: "ga:179857751",
+        viewId: "***",
         dateRanges: [{
           startDate: '7daysAgo',
           endDate: 'today'
@@ -50,7 +50,7 @@ function queryReports(accessToken) {
     method: 'POST',
     body: {
       reportRequests: [{
-        viewId: "ga:179857751",
+        viewId: "***",
         dateRanges: [{
           startDate: '7daysAgo',
           endDate: 'today'
@@ -64,6 +64,25 @@ function queryReports(accessToken) {
       }]
     }
   }).then(displayBrowser, console.error.bind(console));
+
+  // ::::: Request: Page View :::::
+  gapi.client.request({
+    path: '/v4/reports:batchGet',
+    root: 'https://analyticsreporting.googleapis.com/',
+    method: 'POST',
+    body: {
+      reportRequests: [{
+        viewId: "***",
+        dateRanges: [{
+          startDate: '7daysAgo',
+          endDate: 'today'
+        }],
+        metrics: [{
+          expression: 'ga:pageviews'
+        }]
+      }]
+    }
+  }).then(displayPageviews, console.error.bind(console));
 }
 
 function displayActiveUsers(res) {
@@ -78,4 +97,9 @@ function displayDate(res) {
 function displayBrowser(res) {
   var formattedJson = JSON.stringify(res.result, null, 2);
   document.getElementById('browser-content').innerHTML = formattedJson;
+}
+
+function displayPageviews(res) {
+  var formattedJson = JSON.stringify(res.result, null, 2);
+  document.getElementById('page-views-content').innerHTML = formattedJson;
 }
