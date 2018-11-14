@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Hello Analytics Reporting API V4</title>
+  <meta name="google-signin-client_id" content="515465435162-mqrovgo9cvfnb1otbgidl2bmhqgdm0do.apps.googleusercontent.com">
+  <meta name="google-signin-scope" content="https://www.googleapis.com/auth/analytics.readonly">
+  <link rel="shortcut icon" href="./favicon.ico" />
+</head>
+
+<body>
+  <h1>Google Analytics Example Site</h1>
+  <h1>Analytics</h1>
+  <ul>
+    <li><a href="./index.html">Home</a></li>
+    <li><a href="./about.html">About</a></li>
+    <li><a href="">Analytics</a></li>
+  </ul>
+
+  <!-- The Sign-in button. This will run `queryReports()` on success. -->
+  <!-- <p class="g-signin2" data-onsuccess="queryReports"></p> -->
+
+  <!-- The API response will be printed here. -->
+  <div id="active-users">
+    <h4>Active Users</h4>
+    <div id="active-users-content"></div>
+  </div>
+
+  <div id="date">
+    <h4>Date</h4>
+    <div id="date-content"></div>
+  </div>
+
+  <div id="browser">
+    <h4>Browsers</h4>
+    <div id="browser-content"></div>
+  </div>
+
+  <button id="sign-in-or-out-button" style="margin-left: 25px">Sign In/Authorize</button>
+  <button id="revoke-access-button" style="display: none; margin-left: 25px">Revoke access</button>
+
+  <div id="auth-status" style="display: inline; padding-left: 25px"></div>
+  <hr>
+
+  <script>
+    (function (w, d, s, g, js, fjs) {
+      g = w.gapi || (w.gapi = {});
+      g.analytics = {
+        q: [],
+        ready: function (cb) {
+          this.q.push(cb)
+        }
+      };
+      js = d.createElement(s);
+      fjs = d.getElementsByTagName(s)[0];
+      js.src = 'https://apis.google.com/js/platform.js';
+      fjs.parentNode.insertBefore(js, fjs);
+      js.onload = function () {
+        g.load('analytics')
+      };
+    }(window, document, 'script'));
+  </script>
+  <script src="./app.js"></script>
+  <script src="auth.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
+    onreadystatechange="if (this.readyState === 'complete') this.onload()">
+  </script>
+  <!-- Load the JavaScript API client and Sign-in library. -->
+  <script src="https://apis.google.com/js/client:platform.js"></script>
+
+
+
+</body>
+
+</html>

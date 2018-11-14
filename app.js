@@ -1,138 +1,81 @@
-gapi.analytics.ready(function () {
+function queryReports(accessToken) {
 
-  // Authorize the user
+  // Fetch Realtime api
+  var apiURL = 'https://www.googleapis.com/analytics/v3/data/realtime?ids=',
+    viewId = "ga:179857751",
+    apiOptions = '&metrics=rt:activeUsers';
 
-  var CLIENT_ID = '515465435162-mqrovgo9cvfnb1otbgidl2bmhqgdm0do.apps.googleusercontent.com';
+    (function poll() {
+     setTimeout(function() {
+       fetch(apiURL + viewId + apiOptions + "&access_token=" + accessToken)
+       .then(response => response.json())
+       .then(result => {
+         if (result.error)
+           console.log(result.error.message);
+         else //if (result.totalsForAllResults['rt:activeUsers'] > 0)
+           displayActiveUsers(result);
+       })
+       .then(poll())
+       .catch(error => console.log('error:', error));
+      }, 5000);
+  })();
 
-  gapi.analytics.auth.authorize({
-    container: 'auth-button',
-    clientid: CLIENT_ID,
-  });
 
 
-  /**
-   * Create a new ActiveUsers instance to be rendered inside of an
-   * element with the id "active-users-container" and poll for changes every
-   * five seconds.
-   */
-  var activeUsers = new gapi.analytics.ext.ActiveUsers({
-    container: 'active-users-container',
-    pollingInterval: 5,
-    ids: "ga:179857751"
-  });
-
-  // Step 4: Create the view selector.
-
-  var viewSelector = new gapi.analytics.ViewSelector({
-    container: 'view-selector'
-  });
-
-  // Step 5: Create the timeline chart.
-
-  var timeline = new gapi.analytics.googleCharts.DataChart({
-    reportType: 'ga',
-    query: {
-      'dimensions': 'ga:date',
-      'metrics': 'ga:sessions',
-      'start-date': '30daysAgo',
-      'end-date': 'yesterday',
-    },
-    chart: {
-      type: 'LINE',
-      container: 'timeline'
+  // Request for ga:sessions
+  gapi.client.request({
+    path: '/v4/reports:batchGet',
+    root: 'https://analyticsreporting.googleapis.com/',
+    method: 'POST',
+    body: {
+      reportRequests: [{
+        viewId: "ga:179857751",
+        dateRanges: [{
+          startDate: '7daysAgo',
+          endDate: 'today'
+        }],
+        metrics: [{
+          expression: 'ga:sessions'
+        }],
+        dimensions: [{
+          'name': 'ga:date'
+        }]
+      }]
     }
-  });
+  }).then(displayDate, console.error.bind(console));
 
-  /**
-   * Create a ViewSelector for the first view to be rendered inside of an
-   * element with the id "view-selector-1-container".
-   */
-  var viewSelector1 = new gapi.analytics.ViewSelector({
-    container: 'view-selector-1-container'
-  });
-
-  /**
-   * Create the first DataChart for top countries over the past 30 days.
-   * It will be rendered inside an element with the id "chart-1-container".
-   */
-  var dataChart1 = new gapi.analytics.googleCharts.DataChart({
-    query: {
-      metrics: 'ga:sessions',
-      dimensions: 'ga:browser',
-      'start-date': '30daysAgo',
-      'end-date': 'yesterday',
-      'max-results': 6,
-      sort: '-ga:sessions'
-    },
-    chart: {
-      container: 'chart-1-container',
-      type: 'PIE',
-      options: {
-        width: '100%',
-        pieHole: 4 / 9
-      }
+  gapi.client.request({
+    path: '/v4/reports:batchGet',
+    root: 'https://analyticsreporting.googleapis.com/',
+    method: 'POST',
+    body: {
+      reportRequests: [{
+        viewId: "ga:179857751",
+        dateRanges: [{
+          startDate: '7daysAgo',
+          endDate: 'today'
+        }],
+        metrics: [{
+          expression: 'ga:sessions'
+        }],
+        dimensions: [{
+          'name': 'ga:browser'
+        }]
+      }]
     }
-  });
+  }).then(displayBrowser, console.error.bind(console));
+}
 
-  var viewSelector2 = new gapi.analytics.ViewSelector({
-    container: 'view-selector-2-container'
-  });
+function displayActiveUsers(res) {
+  document.getElementById('active-users-content').innerHTML = res.totalsForAllResults["rt:activeUsers"];
+}
 
-  var dataChart2 = new gapi.analytics.googleCharts.DataChart({
-    query: {
-      metrics: 'ga:sessions',
-      dimensions: 'ga:mobileDeviceInfo',
-      'start-date': '30daysAgo',
-      'end-date': 'yesterday',
-      'max-results': 6,
-      sort: '-ga:sessions'
-    },
-    chart: {
-      container: 'chart-2-container',
-      type: 'PIE',
-      options: {
-        width: '100%',
-        pieHole: 4 / 9
-      }
-    }
-  });
+function displayDate(res) {
+  var formattedJson = JSON.stringify(res.result, null, 2);
+  document.getElementById('date-content').innerHTML = formattedJson;
+}
 
-  // Step 6: Hook up the components to work together.
-
-  gapi.analytics.auth.on('success', function (response) {
-    // Start tracking active users for this view.
-    activeUsers.set(response).execute();
-
-    viewSelector.execute();
-    viewSelector1.execute();
-    viewSelector2.execute();
-  });
-
-  viewSelector.on('change', function (ids) {
-    var newIds = {
-      query: {
-        ids: ids
-      }
-    }
-    timeline.set(newIds).execute();
-  });
-
-  /**
-   * Update the first dataChart when the first view selecter is changed.
-   */
-  viewSelector1.on('change', function (ids) {
-    dataChart1.set({
-      query: {
-        ids: ids
-      }
-    }).execute();
-  });
-
-  viewSelector2.on('change', function (ids) {
-    dataChart2.set({
-      query: {
-        ids: ids
-      }
-    }).execute();
-  });
-});
+function displayBrowser(res) {
+  var formattedJson = JSON.stringify(res.result, null, 2);
+  document.getElementById('browser-content').innerHTML = formattedJson;
+}
