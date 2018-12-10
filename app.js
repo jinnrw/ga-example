@@ -1,23 +1,30 @@
-function queryReports(accessToken) {
+var timeoutId;
+
+function queryReports(accessToken, viewId) {
 
   // Fetch Realtime api
   var apiURL = 'https://www.googleapis.com/analytics/v3/data/realtime?ids=',
-    viewId = "***",
     apiOptions = '&metrics=rt:activeUsers';
+  var viewId = 'ga:' + viewId;
 
-    (function poll() {
-     setTimeout(function() {
-       fetch(apiURL + viewId + apiOptions + "&access_token=" + accessToken)
-       .then(response => response.json())
-       .then(result => {
-         if (result.error)
-           console.log(result.error.message);
-         else //if (result.totalsForAllResults['rt:activeUsers'] > 0)
-           displayActiveUsers(result);
-       })
-       .then(poll())
-       .catch(error => console.log('error:', error));
-      }, 5000);
+  // Polling function needs to be clear first when making a new polling
+  // i.e. when making the 2nd client api call, first clear the 1st api call
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
+  (function poll() {
+    timeoutId = setTimeout(function () {
+      fetch(apiURL + viewId + apiOptions + "&access_token=" + accessToken)
+        .then(response => response.json())
+        .then(result => {
+          if (result.error)
+            console.log(result.error.message);
+          else //if (result.totalsForAllResults['rt:activeUsers'] > 0)
+            displayActiveUsers(result);
+        })
+        .then(poll())
+        .catch(error => console.log('error:', error));
+    }, 5000);
   })();
 
 
@@ -29,7 +36,7 @@ function queryReports(accessToken) {
     method: 'POST',
     body: {
       reportRequests: [{
-        viewId: "***",
+        viewId: viewId,
         dateRanges: [{
           startDate: '7daysAgo',
           endDate: 'today'
@@ -50,7 +57,7 @@ function queryReports(accessToken) {
     method: 'POST',
     body: {
       reportRequests: [{
-        viewId: "***",
+        viewId: viewId,
         dateRanges: [{
           startDate: '7daysAgo',
           endDate: 'today'
@@ -72,10 +79,13 @@ function queryReports(accessToken) {
     method: 'POST',
     body: {
       reportRequests: [{
-        viewId: "***",
+        viewId: viewId,
         dateRanges: [{
           startDate: '7daysAgo',
           endDate: 'today'
+        }],
+        dimensions: [{
+          name: 'ga:pagePath'
         }],
         metrics: [{
           expression: 'ga:pageviews'

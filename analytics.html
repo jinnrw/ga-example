@@ -4,8 +4,6 @@
 <head>
   <meta charset="utf-8">
   <title>Hello Analytics Reporting API V4</title>
-  <meta name="google-signin-client_id" content="515465435162-mqrovgo9cvfnb1otbgidl2bmhqgdm0do.apps.googleusercontent.com">
-  <meta name="google-signin-scope" content="https://www.googleapis.com/auth/analytics.readonly">
   <link rel="shortcut icon" href="./favicon.ico" />
   <link rel="stylesheet" href="./style.css">
 </head>
@@ -23,33 +21,39 @@
   <!-- <p class="g-signin2" data-onsuccess="queryReports"></p> -->
 
   <!-- The API response will be printed here. -->
-  <div id="active-users">
-    <h4>Active Users</h4>
-    <div id="active-users-content"></div>
-  </div>
+  <main class="app">
+    <div class="client">
+      <h2 class="client-title">Client ga-example</h2>
+      <div id="active-users">
+        <h4>Active Users</h4>
+        <div id="active-users-content"></div>
+      </div>
 
-  <div class="reports">
-  <div id="date">
-    <h4>Date</h4>
-    <div id="date-content"></div>
-  </div>
+      <div class="reports">
+        <div>
+          <h4>Date</h4>
+          <div id="date-content"></div>
+        </div>
 
-  <div id="browser">
-    <h4>Browsers</h4>
-    <div id="browser-content"></div>
-  </div>
+        <div id="browser">
+          <h4>Browsers</h4>
+          <div id="browser-content"></div>
+        </div>
 
-  <div id="page-views">
-    <h4>Page Views</h4>
-    <div id="page-views-content"></div>
-  </div>
-</div>
-  <button id="sign-in-or-out-button" style="margin-left: 25px">Sign In/Authorize</button>
-  <button id="revoke-access-button" style="display: none; margin-left: 25px">Revoke access</button>
+        <div id="page-views">
+          <h4>Page Views</h4>
+          <div id="page-views-content"></div>
+        </div>
+      </div>
+    </div>
 
-  <div id="auth-status" style="display: inline; padding-left: 25px"></div>
-  <hr>
-
+    <div class="sign-in-clients">
+        <button onclick="changeClient(0)" class="client-1">Client 1</button>
+        <button onclick="changeClient(1)" class="client-2">Client 2</button>
+    </div>
+    
+    <div id="auth-status" style="display: inline; padding-left: 25px"></div>
+  </main>
   <script>
     (function (w, d, s, g, js, fjs) {
       g = w.gapi || (w.gapi = {});
@@ -69,7 +73,8 @@
     }(window, document, 'script'));
   </script>
   <script src="./app.js"></script>
-  <script src="auth.js"></script>
+  <script src="./auth.js"></script>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
     onreadystatechange="if (this.readyState === 'complete') this.onload()">
